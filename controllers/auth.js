@@ -9,8 +9,8 @@ const createUser = async (req, res = response) => {
     try {
         let user = await User.findOne({ email })
         if (user) {
-            res.status(400).json({
-                ok: true,
+            return res.status(400).json({
+                ok: false,
                 msg: 'El correo ya ha sido registrado'
             });
         }
@@ -22,7 +22,7 @@ const createUser = async (req, res = response) => {
 
         const token = await genereteJWT(newUser.id, newUser.name)
 
-        res.status(201).json({
+        return res.status(201).json({
             ok: true,
             uid: newUser.id,
             name: newUser.name,
@@ -43,15 +43,15 @@ const login = async (req, res = response) => {
 
         let user = await User.findOne({ email })
         if (!user) {
-            res.status(400).json({
-                ok: true,
+            return res.status(400).json({
+                ok: false,
                 msg: 'El usuario no existe'
             });
         }
 
         if (!bcrypt.compareSync(password, user.password)) {
-            res.status(400).json({
-                ok: true,
+            return res.status(400).json({
+                ok: false,
                 msg: 'Contraseña incorrecto'
             });
         }
